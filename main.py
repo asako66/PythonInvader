@@ -44,6 +44,30 @@ class Beam(pygame.sprite.Sprite):
       Beam.counter -= 1
       self.kill()
 
+class Background:
+  """背景"""
+  ASA, YUGATA, YORU = 1,2,3
+  background_status = ASA
+
+  def __init__(self):
+    self.image1 = pygame.image.load("picture/bg_pattern2_aozora.png")
+    self.image1 = pygame.transform.scale(self.image1, (640, 480))
+    self.rect1 = self.image1.get_rect()
+    self.image2 = pygame.image.load("picture/bg_pattern3_yuyake.png")
+    self.image2 = pygame.transform.scale(self.image2, (640, 480))
+    self.rect2 = self.image2.get_rect()
+    self.image3 = pygame.image.load("picture/bg_pattern4_yoru.png")
+    self.image3 = pygame.transform.scale(self.image3, (640, 480))
+    self.rect3 = self.image3.get_rect()
+
+  def draw(self,screen):
+    if Background.background_status == Background.ASA:
+      screen.blit(self.image1, self.rect1)
+    if Background.background_status == Background.YUGATA:
+      screen.blit(self.image2, self.rect2)
+    if Background.background_status == Background.YORU:
+      screen.blit(self.image3, self.rect3)
+
 
 def main():
   # 初期設定
@@ -59,6 +83,7 @@ def main():
   Player.containers = group
   Beam.containers = group
 
+  background = Background()
   player = Player()
 
   while True:
@@ -69,6 +94,7 @@ def main():
     group.update()
 
     # 画面（screen）上に登場する人もの背景を描画
+    background.draw(screen)
     group.draw(screen)
 
     # 画面（screen）の実表示
