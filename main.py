@@ -68,6 +68,24 @@ class Background:
     if Background.background_status == Background.YORU:
       screen.blit(self.image3, self.rect3)
 
+class Ufo(pygame.sprite.Sprite):
+  """UFO"""
+  SPEED = 2
+  move_width = 230
+
+  def __init__(self, pos):
+    pygame.sprite.Sprite.__init__(self, self.containers)
+    self.image = pygame.image.load("picture/alien_ufo.png").convert_alpha()
+    self.image = pygame.transform.scale(self.image, (56,56))
+    self.rect = self.image.get_rect()
+    self.rect.center = pos
+    self.left = pos[0]
+    self.right = self.left + Ufo.move_width
+
+  def update(self):
+    self.rect.move_ip(Ufo.SPEED, 0)
+    if self.rect.center[0] < self.left or self.rect.center[0] > self.right:
+      Ufo.SPEED = -Ufo.SPEED
 
 def main():
   # 初期設定
@@ -82,9 +100,15 @@ def main():
   group = pygame.sprite.RenderUpdates()
   Player.containers = group
   Beam.containers = group
+  Ufo.containers = group
 
   background = Background()
   player = Player()
+
+  for i in range(0, 50):
+    x = 20 + (i % 10) * 40
+    y = 20 + (i / 10) * 40
+    Ufo((x,y))
 
   while True:
     # 画面（screen）をクリア
