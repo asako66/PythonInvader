@@ -87,6 +87,15 @@ class Ufo(pygame.sprite.Sprite):
     if self.rect.center[0] < self.left or self.rect.center[0] > self.right:
       Ufo.SPEED = -Ufo.SPEED
 
+def collision_det(beam_g, ufo_g):
+  ufo_collided = pygame.sprite.groupcollide(ufo_g, beam_g, True ,True)
+  if ufo_collided:
+    Beam.counter -= 1
+  for ufo in ufo_collided.keys():
+    """サウンドの再生"""
+    # Ufo.kill_sound.play()
+
+
 def main():
   # 初期設定
   pygame.init()
@@ -98,9 +107,11 @@ def main():
 
   # Sprite登録
   group = pygame.sprite.RenderUpdates()
+  beam_g = pygame.sprite.Group()
+  ufo_g = pygame.sprite.Group()
   Player.containers = group
-  Beam.containers = group
-  Ufo.containers = group
+  Beam.containers = group, beam_g
+  Ufo.containers = group,ufo_g
 
   background = Background()
   player = Player()
@@ -138,6 +149,9 @@ def main():
           if Beam.counter < 3:
             Beam.counter += 1
             Beam(player)
+
+    """衝突判定"""
+    collision_det(beam_g, ufo_g)
 
     # 描画スピードの調整（FPS）
     clock.tick(60)
