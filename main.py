@@ -93,7 +93,7 @@ def collision_det(beam_g, ufo_g):
     Beam.counter -= 1
   for ufo in ufo_collided.keys():
     """サウンドの再生"""
-    # Ufo.kill_sound.play()
+    Ufo.kill_sound.play()
 
 
 def main():
@@ -104,6 +104,9 @@ def main():
   clock = pygame.time.Clock()
 
   # 登場する人もの背景の作成
+
+
+  Ufo.kill_sound = pygame.mixer.Sound("music/System36.ogg")
 
   # Sprite登録
   group = pygame.sprite.RenderUpdates()
