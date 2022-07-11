@@ -119,10 +119,11 @@ def main():
   background = Background()
   player = Player()
 
-  for i in range(0, 50):
+  for i in range(0, 10):
     x = 20 + (i % 10) * 40
-    y = 20 + (i / 10) * 40
-    Ufo((x,y))
+    for j in range(0,5):
+      y = 20 + j * 40
+      Ufo((x,y))
 
   while True:
     # 画面（screen）をクリア
