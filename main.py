@@ -1,7 +1,7 @@
-from tokenize import group
 import pygame
 from pygame.locals import *
 import sys
+import random
 
 SCREEN = Rect((0,0,640,480))
 
@@ -72,6 +72,7 @@ class Ufo(pygame.sprite.Sprite):
   """UFO"""
   SPEED = 2
   move_width = 230
+  prob_action = 0.01
 
   def __init__(self, pos):
     pygame.sprite.Sprite.__init__(self, self.containers)
@@ -86,6 +87,28 @@ class Ufo(pygame.sprite.Sprite):
     self.rect.move_ip(Ufo.SPEED, 0)
     if self.rect.center[0] < self.left or self.rect.center[0] > self.right:
       Ufo.SPEED = -Ufo.SPEED
+    if random.random() < self.prob_action:
+      Action(self)
+
+class Action(pygame.sprite.Sprite):
+  """UFOからの攻撃"""
+  SPEED = 3
+  counter = 0
+
+  def __init__(self,ufo):
+    pygame.sprite.Sprite.__init__(self, self.containers)
+    self.image = pygame.image.load("picture/beam_blue.png").convert_alpha()
+    self.image = pygame.transform.scale(self.image, (56,56))
+    self.image = pygame.transform.rotate(self.image, 90)
+    self.rect = self.image.get_rect()
+    self.ufo = ufo
+    self.rect.center = self.ufo.rect.center
+
+  def update(self):
+    self.rect.move_ip(0, Action.SPEED)
+    if self.rect.bottom > SCREEN.height:
+      self.kill()
+
 
 def collision_det(beam_g, ufo_g):
   ufo_collided = pygame.sprite.groupcollide(ufo_g, beam_g, True ,True)
@@ -115,6 +138,7 @@ def main():
   Player.containers = group
   Beam.containers = group, beam_g
   Ufo.containers = group,ufo_g
+  Action.containers = group
 
   background = Background()
   player = Player()
