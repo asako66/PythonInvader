@@ -109,15 +109,20 @@ class Action(pygame.sprite.Sprite):
     if self.rect.bottom > SCREEN.height:
       self.kill()
 
-
-def collision_det(beam_g, ufo_g):
+"""衝突判定"""
+def collision_det(player, beam_g, ufo_g, action_g):
+  """UFOとビームの衝突判定"""
   ufo_collided = pygame.sprite.groupcollide(ufo_g, beam_g, True ,True)
   if ufo_collided:
     Beam.counter -= 1
   for ufo in ufo_collided.keys():
     """サウンドの再生"""
     Ufo.kill_sound.play()
-
+  """PlayerとUFOからのアクションとの衝突判定"""
+  action_collided = pygame.sprite.spritecollide(player, action_g, True)
+  if action_collided:
+    Player.action_sound.play()
+    """ゲームオーバー"""
 
 def main():
   # 初期設定
@@ -130,15 +135,17 @@ def main():
 
 
   Ufo.kill_sound = pygame.mixer.Sound("music/System36.ogg")
+  Player.action_sound = pygame.mixer.Sound("music/System32.ogg")
 
   # Sprite登録
   group = pygame.sprite.RenderUpdates()
   beam_g = pygame.sprite.Group()
   ufo_g = pygame.sprite.Group()
+  action_g = pygame.sprite.Group()
   Player.containers = group
   Beam.containers = group, beam_g
   Ufo.containers = group,ufo_g
-  Action.containers = group
+  Action.containers = group,action_g
 
   background = Background()
   player = Player()
@@ -179,7 +186,7 @@ def main():
             Beam(player)
 
     """衝突判定"""
-    collision_det(beam_g, ufo_g)
+    collision_det(player, beam_g, ufo_g , action_g)
 
     # 描画スピードの調整（FPS）
     clock.tick(60)
