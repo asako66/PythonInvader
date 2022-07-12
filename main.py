@@ -72,7 +72,7 @@ class Ufo(pygame.sprite.Sprite):
   """UFO"""
   SPEED = 2
   move_width = 230
-  prob_action = 0.01
+  prob_action = 0.0001
 
   def __init__(self, pos):
     pygame.sprite.Sprite.__init__(self, self.containers)
