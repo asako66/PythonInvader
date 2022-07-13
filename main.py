@@ -109,6 +109,31 @@ class Action(pygame.sprite.Sprite):
     if self.rect.bottom > SCREEN.height:
       self.kill()
 
+class Explosion(pygame.sprite.Sprite):
+  """爆発アニメ"""
+  animcycle = 16
+  frame = 0
+  IMAGE_WIDTH, IMAGE_HEIGHT = (16,16)
+
+  def __init__(self, pos):
+    pygame.sprite.Sprite.__init__(self, self.containers)
+    self.image = self.images.subsurface(
+      (0,0,Explosion.IMAGE_WIDTH,Explosion.IMAGE_HEIGHT))
+    self.rect = self.image.get_rect()
+    self.rect.center = pos
+    self.image_off = 0
+    self.max_frame = Explosion.animcycle
+
+  def update(self):
+    self.image = self.images.subsurface(
+      (self.image_off * Explosion.IMAGE_WIDTH,0,Explosion.IMAGE_WIDTH,Explosion.IMAGE_HEIGHT)
+    )
+    self.image_off += 1
+    if (self.image_off + 1) == Explosion.animcycle:
+      print(self.image_off)
+      self.kill()
+
+
 """衝突判定"""
 def collision_det(player, beam_g, ufo_g, action_g):
   """UFOとビームの衝突判定"""
@@ -118,6 +143,7 @@ def collision_det(player, beam_g, ufo_g, action_g):
   for ufo in ufo_collided.keys():
     """サウンドの再生"""
     Ufo.kill_sound.play()
+    Explosion(ufo.rect.center)
   """PlayerとUFOからのアクションとの衝突判定"""
   action_collided = pygame.sprite.spritecollide(player, action_g, True)
   if action_collided:
@@ -136,6 +162,7 @@ def main():
 
   Ufo.kill_sound = pygame.mixer.Sound("music/System36.ogg")
   Player.action_sound = pygame.mixer.Sound("music/System32.ogg")
+  Explosion.images = pygame.image.load("picture/Bomb.png")
 
   # Sprite登録
   group = pygame.sprite.RenderUpdates()
@@ -146,6 +173,7 @@ def main():
   Beam.containers = group, beam_g
   Ufo.containers = group,ufo_g
   Action.containers = group,action_g
+  Explosion.containers = group
 
   background = Background()
   player = Player()
