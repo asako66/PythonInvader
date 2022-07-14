@@ -254,13 +254,14 @@ def main():
           opening_sound.stop()
           play_sound.play(-1)
         elif event.key == K_c and game_status == CLEAR:
-          if Background.background_status == Background.ASA:
-            Background.background_status = Background.YUGATA
-          if Background.background_status == Background.YUGATA:
-            Background.background_status = Background.YORU
-          if Background.background_status == Background.YORU:
-            Background.background_status = Background.ASA
+          # if Background.background_status == Background.ASA:
+          #   Background.background_status = Background.YUGATA
+          # if Background.background_status == Background.YUGATA:
+          #   Background.background_status = Background.YORU
+          # if Background.background_status == Background.YORU:
+          #   Background.background_status = Background.ASA
           game_status = PLAY
+          # background = Background()
           for ufo in ufos:
             ufo.kill()
           for i in range(0, 10):
@@ -273,8 +274,9 @@ def main():
           opening_sound.stop()
           play_sound.play(-1)
         elif event.key == K_r and game_status == GAMEOVER:
-          Background.background_status = Background.ASA
+          # Background.background_status = Background.ASA
           game_status = PLAY
+          # background = Background()
           for ufo in ufos:
             ufo.kill()
           player.kill()
